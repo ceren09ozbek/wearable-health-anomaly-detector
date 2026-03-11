@@ -94,11 +94,3 @@ The Streamlit dashboard visualizes:
 • anomaly score distribution  
 • abnormal activity patterns  
 • physiological outliers  
-
----
-
-# Author
-
-Ceren Ozbek
-
-AI / Data Science Portfolio Project
