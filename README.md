@@ -1,4 +1,5 @@
 # Wearable Health Anomaly Detection
+![Dashboard](dashboard/images/1.png)
 
 An end-to-end AI system for detecting abnormal patterns in wearable health data.
 
