@@ -12,8 +12,6 @@ The system includes:
 • Streamlit monitoring dashboard  
 • Git-based reproducible ML pipeline  
 
----
-
 # Project Architecture
 
 Synthetic Data Generator  
@@ -26,16 +24,12 @@ FastAPI Prediction API
 ↓  
 Streamlit Dashboard  
 
----
-
 # Features
 
 • Detect abnormal physiological patterns  
 • Analyze wearable device metrics  
 • Visualize anomalies in an interactive dashboard  
 • Deployable API for real-time predictions  
-
----
 
 # Technologies Used
 
@@ -46,8 +40,6 @@ Streamlit
 Plotly  
 Pandas  
 NumPy  
-
----
 
 # Dataset
 
@@ -60,8 +52,6 @@ sleep_hours
 active_minutes  
 
 Synthetic anomalies are injected to simulate abnormal physiological conditions.
-
----
 
 # Running the Project
 
@@ -84,8 +74,6 @@ uvicorn app.main:app --reload
 Run dashboard:
 
 streamlit run dashboard/app.py
-
----
 
 # Example Dashboard
 
