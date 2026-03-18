@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import List
 
 
 class WearableInput(BaseModel):
@@ -12,3 +13,5 @@ class WearableInput(BaseModel):
 class PredictionResponse(BaseModel):
     anomaly: bool
     anomaly_score: float
+    observations: List[str]
+    insight: str

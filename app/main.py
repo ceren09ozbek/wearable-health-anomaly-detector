@@ -1,25 +1,23 @@
 from fastapi import FastAPI
 from app.schema import WearableInput, PredictionResponse
-from app.model import WearableAnomalyModel
+from app.model import predict_wearable_metrics
 
 
 app = FastAPI(
     title="Wearable Anomaly Detection API",
-    version="1.0"
+    version="2.0"
 )
-
-model = WearableAnomalyModel()
 
 
 @app.get("/")
 def root():
-    return {"message": "Wearable anomaly detection API çalışıyor"}
+    return {"message": "Wearable anomaly detection API with insight engine is running"}
 
 
 @app.post("/predict", response_model=PredictionResponse)
 def predict(data: WearableInput):
 
-    anomaly, score = model.predict(
+    result = predict_wearable_metrics(
         steps=data.steps,
         resting_hr=data.resting_hr,
         hrv=data.hrv,
@@ -28,6 +26,8 @@ def predict(data: WearableInput):
     )
 
     return PredictionResponse(
-        anomaly=anomaly,
-        anomaly_score=score
+        anomaly=result["anomaly"],
+        anomaly_score=result["anomaly_score"],
+        observations=result["observations"],
+        insight=result["insight"]
     )

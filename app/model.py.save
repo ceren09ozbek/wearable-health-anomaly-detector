@@ -1,0 +1,26 @@
+from pathlib import Path
+import joblib
+import numpy as np
+MODEL_PATH = Path("artifacts/iforest_model.joblib")
+
+
+class WearableAnomalyModel:
+
+    def __init__(self):
+        if not MODEL_PATH.exists():
+            raise FileNotFoundError(
+                f"Model bulunamadı: {MODEL_PATH}. Önce train_iforest.py çalıştırılmalı."
+            )
+
+        self.model = joblib.load(MODEL_PATH)
+
+    def predict(self, steps, resting_hr, hrv, sleep_hours, active_minutes):
+
+        X = np.array([[steps, resting_hr, hrv, sleep_hours, active_minutes]])
+
+        label = self.model.predict(X)[0]
+        score = float(self.model.decision_function(X)[0])
+
+        anomaly = label == -1
+
+        return anomaly, score

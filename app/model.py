@@ -2,26 +2,43 @@ from pathlib import Path
 import joblib
 import numpy as np
 
+from app.insight_engine import build_insight_payload
+from app.llm_engine import generate_llm_insight
+
+
 MODEL_PATH = Path("artifacts/iforest_model.joblib")
 
+model = joblib.load(MODEL_PATH)
 
-class WearableAnomalyModel:
 
-    def __init__(self):
-        if not MODEL_PATH.exists():
-            raise FileNotFoundError(
-                f"Model bulunamadı: {MODEL_PATH}. Önce train_iforest.py çalıştırılmalı."
-            )
+def predict_wearable_metrics(steps, resting_hr, hrv, sleep_hours, active_minutes):
 
-        self.model = joblib.load(MODEL_PATH)
+    X = np.array([[steps, resting_hr, hrv, sleep_hours, active_minutes]])
 
-    def predict(self, steps, resting_hr, hrv, sleep_hours, active_minutes):
+    prediction = model.predict(X)[0]
+    score = model.decision_function(X)[0]
 
-        X = np.array([[steps, resting_hr, hrv, sleep_hours, active_minutes]])
+    anomaly = prediction == -1
 
-        label = self.model.predict(X)[0]
-        score = float(self.model.decision_function(X)[0])
+    # 1️⃣ observation üret (rule-based)
+    insight_payload = build_insight_payload(
+        steps=steps,
+        resting_hr=resting_hr,
+        hrv=hrv,
+        sleep_hours=sleep_hours,
+        active_minutes=active_minutes,
+        anomaly=anomaly
+    )
 
-        anomaly = label == -1
+    # 2️⃣ LLM ile final insight üret
+    llm_text = generate_llm_insight(
+        observations=insight_payload["observations"],
+        anomaly=anomaly
+    )
 
-        return anomaly, score
+    return {
+        "anomaly": anomaly,
+        "anomaly_score": float(score),
+        "observations": insight_payload["observations"],
+        "insight": llm_text
+    }
